@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py4eos"
+version = "0.1.0"
+authors = [
+    {name = "K. Arthur Endsley", email = "arthur.endsley@ntsg.umt.edu"}
+]
+description = "Convenience functions for working with HDF4-EOS datasets"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering"
+]
+dependencies = [
+    "numpy>=1.20.0",
+    "rasterio>=1.0.0",
+    "affine>=2.0.0",
+    "pyhdf>=0.11.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "py4eos/tests",
+]
