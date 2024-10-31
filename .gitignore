@@ -1,0 +1,4 @@
+virtualenv.sh
+py4eos.egg-info/
+__pycache__
+py4eos/tests/*.hdf

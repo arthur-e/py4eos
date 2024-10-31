@@ -8,6 +8,8 @@ PLATFORMS_SUPPORTED = ('MODIS',)
 
 class HDF4EOS(object):
     '''
+    Represents an EOS-HDF4 granule.
+
     Parameters
     ----------
     dataset : pyhdf.SD
@@ -101,12 +103,12 @@ class HDF4EOS(object):
 
 def read_hdf4eos(filename, platform = None, mode = 'r'):
     '''
-    Read an HDF4-EOS dataset and return an `HDF4EOS` object.
+    Read an EOS-HDF4 dataset and return an `HDF4EOS` object.
 
     Parameters
     ----------
     filename : str
-        File path for the input HDF4-EOS file
+        File path for the input EOS-HDF4 file
     platform : str
         The name of the data platform the SD originates from; currently
         limited to one of: ("MODIS",)
