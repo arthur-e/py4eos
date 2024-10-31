@@ -1,3 +1,4 @@
+import numpy as np
 import rasterio as rio
 from functools import cached_property
 from affine import Affine
@@ -61,6 +62,10 @@ class HDF4EOS(object):
         xres = self.GRID_DIM_TO_RES[self.platform][xdim]
         return (ul_x, xres, 0, ul_y, 0, -xres)
 
+    @property
+    def subdatasets(self):
+        return self.dataset.datasets() # Chain pyhdf.SD.SD.datasets()
+
     @cached_property
     def transform(self):
         return Affine.from_gdal(*self.geotransform)
@@ -97,7 +102,8 @@ class HDF4EOS(object):
         rows, cols = arr.shape
         rast = rio.open(
             filename, 'w+', driver = driver, height = rows, width = cols,
-            count = 1, dtype = dtype, crs = wkt, transform = self.transform)
+            count = 1, dtype = dtype, crs = self.crs,
+            transform = self.transform)
         rast.write(arr, 1)
 
 

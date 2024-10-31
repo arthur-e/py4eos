@@ -17,6 +17,7 @@ import glob
 import os
 import pytest
 import earthaccess
+import rasterio as rio
 import py4eos
 from py4eos import read_hdf4eos
 
@@ -76,6 +77,17 @@ def test_read_mod15a2h(granule_mod15a2h):
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
 
 
+def test_write_mod15a2h(granule_mod15a2h):
+    '''
+    Tests that a MOD15A2H granule can be written to a GeoTIFF.
+    '''
+    hdf = read_hdf4eos(granule_mod15a2h)
+    hdf.to_rasterio('Fpar_500m', f'{TEST_DIR}/temp.tiff')
+    # Real test is that this doesn't fail
+    ds = rio.open(f'{TEST_DIR}/temp.tiff')
+    assert ds.transform == hdf.transform
+
+
 def test_read_mod16a2(granule_mod16a2):
     '''
     Tests that a MOD16A2 granule can be read and handled.
@@ -85,6 +97,17 @@ def test_read_mod16a2(granule_mod16a2):
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
 
 
+def test_write_mod16a2(granule_mod16a2):
+    '''
+    Tests that a MOD16A2 granule can be written to a GeoTIFF.
+    '''
+    hdf = read_hdf4eos(granule_mod16a2)
+    hdf.to_rasterio('ET_500m', f'{TEST_DIR}/temp.tiff')
+    # Real test is that this doesn't fail
+    ds = rio.open(f'{TEST_DIR}/temp.tiff')
+    assert ds.transform == hdf.transform
+
+
 def test_read_mod16a3(granule_mod16a3):
     '''
     Tests that a MOD16A3 granule can be read and handled.
@@ -92,3 +115,14 @@ def test_read_mod16a3(granule_mod16a3):
     hdf = read_hdf4eos(granule_mod16a3)
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
+
+
+def test_write_mod16a3(granule_mod16a3):
+    '''
+    Tests that a MOD16A3 granule can be written to a GeoTIFF.
+    '''
+    hdf = read_hdf4eos(granule_mod16a3)
+    hdf.to_rasterio('ET_500m', f'{TEST_DIR}/temp.tiff')
+    # Real test is that this doesn't fail
+    ds = rio.open(f'{TEST_DIR}/temp.tiff')
+    assert ds.transform == hdf.transform
