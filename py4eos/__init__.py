@@ -5,6 +5,8 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
+__version__ = '0.1.1'
+
 PLATFORMS_SUPPORTED = ('MODIS',)
 
 class HDF4EOS(object):
