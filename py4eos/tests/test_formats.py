@@ -15,6 +15,7 @@ Tests for the various file formats supported:
 
 import glob
 import os
+import numpy as np
 import pytest
 import earthaccess
 import rasterio as rio
@@ -75,6 +76,7 @@ def test_read_mod15a2h(granule_mod15a2h):
     hdf = read_hdf4eos(granule_mod15a2h)
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
+    assert hdf.get('Lai_500m').shape == (2400, 2400)
 
 
 def test_write_mod15a2h(granule_mod15a2h):
@@ -95,6 +97,9 @@ def test_read_mod16a2(granule_mod16a2):
     hdf = read_hdf4eos(granule_mod16a2)
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
+    arr = hdf.get('ET_500m', dtype = 'int32')
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.int32
 
 
 def test_write_mod16a2(granule_mod16a2):
@@ -115,6 +120,9 @@ def test_read_mod16a3(granule_mod16a3):
     hdf = read_hdf4eos(granule_mod16a3)
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 500.0, 0.0, 5559752.598333, 0.0, -500.0)
+    arr = hdf.get('ET_500m', dtype = 'int32')
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.int32
 
 
 def test_write_mod16a3(granule_mod16a3):

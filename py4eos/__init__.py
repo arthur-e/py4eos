@@ -72,6 +72,36 @@ class HDF4EOS(object):
     def transform(self):
         return Affine.from_gdal(*self.geotransform)
 
+    def get(self, field, dtype = 'float32', scale_and_offset = False):
+        '''
+        Returns the array data for the subdataset (field) named.
+
+        Parameters
+        ----------
+        field : str
+            Name of the subdataset to access
+        dtype : str
+            Name of a NumPy data type, e.g., "float32" for `numpy.float32`
+            (Default)
+        scale_and_offset: bool
+            True to apply the scale and offset, if specified, in the dataset
+            (Default: False)
+
+        Returns
+        -------
+        numpy.ndarray
+        '''
+        dtype = getattr(np, dtype) # Convert from string to NumPy dtype
+        ds = self.dataset.select(field)
+        attrs = self.dataset.select(field).attributes()
+        scale = 1.0
+        offset = 0.0
+        if scale_and_offset:
+            if 'scale_factor' in attrs.keys() and 'add_offset' in attrs.keys():
+                scale = float(attrs['scale_factor'])
+                offset = float(attrs['add_offset'])
+        return (offset + ds[:] * scale).astype(dtype)
+
     def to_rasterio(
             self, field, filename, driver = 'GTiff', dtype = 'float32',
             scale_and_offset = False):
@@ -91,20 +121,11 @@ class HDF4EOS(object):
             True to apply the scale and offset, if specified, in the dataset
             (Default: False)
         '''
-        dtype = getattr(np, dtype) # Convert from string to NumPy dtype
-        ds = self.dataset.select(field)
-        attrs = self.dataset.select(field).attributes()
-        scale = 1.0
-        offset = 0.0
-        if scale_and_offset:
-            if 'scale_factor' in attrs.keys() and 'add_offset' in attrs.keys():
-                scale = float(attrs['scale_factor'])
-                offset = float(attrs['add_offset'])
-        arr = offset + ds[:] * scale
+        arr = self.get(field, dtype, scale_and_offset)
         rows, cols = arr.shape
         rast = rio.open(
             filename, 'w+', driver = driver, height = rows, width = cols,
-            count = 1, dtype = dtype, crs = self.crs,
+            count = 1, dtype = getattr(np, dtype), crs = self.crs,
             transform = self.transform)
         rast.write(arr, 1)
 

@@ -52,5 +52,7 @@ pip install py4eos
 **Running the test suite,** from the root directory of the repository:
 
 ```sh
-pytest
+python -m pytest
 ```
+
+**Because data has to be downloaded as part of running the tests, they may fail the first time. Try running once more.**
