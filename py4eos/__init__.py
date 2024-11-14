@@ -1,13 +1,14 @@
 import numpy as np
+import h5py
 import rasterio as rio
 from functools import cached_property
 from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
-PLATFORMS_SUPPORTED = ('MODIS',)
+PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
 class HDF4EOS(object):
     '''
@@ -25,6 +26,9 @@ class HDF4EOS(object):
     GRID_DIM_TO_RES = { # Mapping of grid dimensions to spatial resolution
         'MODIS': {
             2400: 500 # 2400 x 2400 pixels == 500 meters
+        },
+        'VIIRS': {
+            2400: 500
         }
     }
 
@@ -38,15 +42,20 @@ class HDF4EOS(object):
     def attrs(self):
         if self.platform == 'MODIS':
             meta = self.dataset.attributes()['StructMetadata.0']
+        elif self.platform == 'VIIRS':
+            meta = self.dataset['HDFEOS INFORMATION/StructMetadata.0'][()]
+            if hasattr(meta, 'decode'):
+                meta = meta.decode('utf-8')
         attrs = [line.split('=') for line in meta.replace('\t', '').split('\n')]
-        # TODO This is quick and dirty; there are multiple nested attributes
-        #   with similar names that will be overwritten when converting to
-        #   a dictionary; it's assumed those are not important
-        return dict(list(filter(lambda x: len(x) == 2, attrs)))
+        # TODO This is quick and dirty; there are multiple nested
+        #   attributes with similar names that will be overwritten when
+        #   converitng to a dictionary; it's assumed they're not important
+        attrs = list(filter(lambda x: len(x) == 2, attrs))
+        return dict(attrs)
 
     @cached_property
     def crs(self):
-        if self.platform == 'MODIS':
+        if self.platform in ('MODIS', 'VIIRS'):
             wkt = SRS[6842]
         return wkt
 
@@ -54,10 +63,11 @@ class HDF4EOS(object):
     def geotransform(self):
         # TODO Will need to generalize these two attribute checks when support
         #   beyond MODIS is added
-        if 'UpperLeftPointMtrs' not in self.attrs.keys():
-            raise KeyError('Could not determine upper-left corner coordinates; on one of the following is missing from the attributes: "UpperLeftPointMtrs"')
-        if 'XDim' not in self.attrs.keys() or 'YDim' not in self.attrs.keys():
-            raise KeyError('Could not determine spatial resolution; "XDim" and "YDim" missing from attributes')
+        if self.platform in ('MODIS', 'VIIRS'):
+            if 'UpperLeftPointMtrs' not in self.attrs.keys():
+                raise KeyError('Could not determine upper-left corner coordinates; on one of the following is missing from the attributes: "UpperLeftPointMtrs"')
+            if 'XDim' not in self.attrs.keys() or 'YDim' not in self.attrs.keys():
+                raise KeyError('Could not determine spatial resolution; "XDim" and "YDim" missing from attributes')
         ul = list(map(float, self.attrs['UpperLeftPointMtrs'].strip('()').split(',')))
         ul_x, ul_y = ul
         xdim = int(self.attrs['XDim'])
@@ -92,8 +102,12 @@ class HDF4EOS(object):
         numpy.ndarray
         '''
         dtype = getattr(np, dtype) # Convert from string to NumPy dtype
-        ds = self.dataset.select(field)
-        attrs = self.dataset.select(field).attributes()
+        if isinstance(self.dataset, h5py.File):
+            ds = self.dataset[field]
+            attrs = self.dataset[field].attrs
+        else:
+            ds = self.dataset.select(field)
+            attrs = self.dataset.select(field).attributes()
         scale = 1.0
         offset = 0.0
         if scale_and_offset:
@@ -148,9 +162,16 @@ def read_hdf4eos(filename, platform = None, mode = 'r'):
     -------
     HDF4EOS
     '''
-    mode = SDC.WRITE if mode == 'w' else SDC.READ
-    if platform is None:
+    if platform is None or platform == 'MODIS':
+        mode = SDC.WRITE if mode == 'w' else SDC.READ
         sd = SD(filename, mode = mode)
-    else:
-        sd = SD(filename, platform = platform, mode = mode)
-    return HDF4EOS(sd)
+        dataset = HDF4EOS(sd)
+    elif platform == 'VIIRS':
+        sd = h5py.File(filename, mode)
+        dataset = HDF4EOS(sd, platform = platform)
+    return dataset
+
+
+if __name__ == '__main__':
+    import fire
+    fire.Fire(read_hdf4eos)

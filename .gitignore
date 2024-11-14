@@ -3,6 +3,7 @@ dist/
 build/
 py4eos.egg-info/
 __pycache__
+py4eos/tests/*.h5
 py4eos/tests/*.hdf
 py4eos/tests/*.tif
 py4eos/tests/*.tiff
