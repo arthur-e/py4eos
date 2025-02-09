@@ -6,7 +6,7 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
@@ -120,6 +120,9 @@ class HDF4EOS(object):
             self, field, filename, driver = 'GTiff', dtype = 'float32',
             scale_and_offset = False):
         '''
+        Creates a `rasterio` dataset based on the specified EOS-HDF4 dataset.
+        User `driver = 'MEM'` for an in-memory dataset (no file written).
+
         Parameters
         ----------
         field : str
@@ -134,6 +137,10 @@ class HDF4EOS(object):
         scale_and_offset: bool
             True to apply the scale and offset, if specified, in the dataset
             (Default: False)
+
+        Returns
+        -------
+        `rasterio.DatasetWriter`
         '''
         arr = self.get(field, dtype, scale_and_offset)
         rows, cols = arr.shape
@@ -142,6 +149,7 @@ class HDF4EOS(object):
             count = 1, dtype = getattr(np, dtype), crs = self.crs,
             transform = self.transform)
         rast.write(arr, 1)
+        return rast
 
 
 def read_hdf4eos(filename, platform = None, mode = 'r'):
