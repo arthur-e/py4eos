@@ -1,3 +1,23 @@
+'''
+Tools for working with HDF4-EOS granules. Example uses:
+
+```python
+import earthaccess
+import py4eos
+
+# Download a MOD16A3GF granule
+result = earthaccess.search_data(
+    short_name = 'MOD16A3GF',
+    temporal = ('2014-01-01', '2014-12-31'),
+    bounding_box = (-106, 42, -103, 43))
+earthaccess.download(result, TEST_DIR)
+
+# Write the file to a GeoTIFF
+hdf = py4eos.read_hdf4eos(granule_mod16a3)
+hdf.to_rasterio('ET_500m', 'output_file.tiff')
+```
+'''
+
 import numpy as np
 import h5py
 import rasterio as rio
@@ -12,7 +32,7 @@ PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
 class HDF4EOS(object):
     '''
-    Represents an EOS-HDF4 granule.
+    Represents an HDF4-EOS granule.
 
     Parameters
     ----------
@@ -82,7 +102,9 @@ class HDF4EOS(object):
     def transform(self):
         return Affine.from_gdal(*self.geotransform)
 
-    def get(self, field, dtype = 'float32', nodata = None, scale_and_offset = False):
+    def get(
+            self, field, dtype = 'float32', nodata = None,
+            scale_and_offset = False):
         '''
         Returns the array data for the subdataset (field) named.
 
@@ -93,6 +115,9 @@ class HDF4EOS(object):
         dtype : str
             Name of a NumPy data type, e.g., "float32" for `numpy.float32`
             (Default)
+        nodata : int or float
+            The NoData value to use; otherwise, defaults to the "_FillValue"
+            attribute
         scale_and_offset: bool
             True to apply the scale and offset, if specified, in the dataset
             (Default: False)
@@ -132,7 +157,7 @@ class HDF4EOS(object):
             self, field, filename, driver = 'GTiff', dtype = 'float32',
             scale_and_offset = False):
         '''
-        Creates a `rasterio` dataset based on the specified EOS-HDF4 dataset.
+        Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
         User `driver = 'MEM'` for an in-memory dataset (no file written).
 
         Parameters
@@ -166,12 +191,12 @@ class HDF4EOS(object):
 
 def read_hdf4eos(filename, platform = None, mode = 'r'):
     '''
-    Read an EOS-HDF4 dataset and return an `HDF4EOS` object.
+    Read an HDF4-EOS dataset and return an `HDF4EOS` object.
 
     Parameters
     ----------
     filename : str
-        File path for the input EOS-HDF4 file
+        File path for the input HDF4-EOS file
     platform : str
         The name of the data platform the SD originates from; currently
         limited to one of: ("MODIS",)

@@ -30,4 +30,4 @@ dependencies = [
 version = {attr = "py4eos.__version__"}
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0.0", "earthaccess>=0.9.0"]
+dev = ["pytest>=8.0.0", "earthaccess>=0.9.0", "pdoc3>=0.9.2"]
