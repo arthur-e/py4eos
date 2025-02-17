@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>py4eos API documentation</title>
+<meta name="description" content="Tools for working with HDF4-EOS granules. Example uses: …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>py4eos</code></h1>
+</header>
+<section id="section-intro">
+<p>Tools for working with HDF4-EOS granules. Example uses:</p>
+<pre><code class="language-python">import earthaccess
+import py4eos
+
+# Download a MOD16A3GF granule
+result = earthaccess.search_data(
+    short_name = 'MOD16A3GF',
+    temporal = ('2014-01-01', '2014-12-31'),
+    bounding_box = (-106, 42, -103, 43))
+earthaccess.download(result, TEST_DIR)
+
+# Write the file to a GeoTIFF
+hdf = py4eos.read_hdf4eos(granule_mod16a3)
+hdf.to_rasterio('ET_500m', 'output_file.tiff')
+</code></pre>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="py4eos.srs" href="srs.html">py4eos.srs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="py4eos.read_hdf4eos"><code class="name flex">
+<span>def <span class="ident">read_hdf4eos</span></span>(<span>filename, platform=None, mode='r')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_hdf4eos(filename, platform = None, mode = &#39;r&#39;):
+    &#39;&#39;&#39;
+    Read an HDF4-EOS dataset and return an `HDF4EOS` object.
+
+    Parameters
+    ----------
+    filename : str
+        File path for the input HDF4-EOS file
+    platform : str
+        The name of the data platform the SD originates from; currently
+        limited to one of: (&#34;MODIS&#34;,)
+    mode : str
+        The file mode, should be &#34;r&#34; (read) or &#34;w&#34; (&#34;write&#34;) (Default: &#34;r&#34;)
+
+    Returns
+    -------
+    HDF4EOS
+    &#39;&#39;&#39;
+    if platform is None or platform == &#39;MODIS&#39;:
+        mode = SDC.WRITE if mode == &#39;w&#39; else SDC.READ
+        sd = SD(filename, mode = mode)
+        dataset = HDF4EOS(sd)
+    elif platform == &#39;VIIRS&#39;:
+        sd = h5py.File(filename, mode)
+        dataset = HDF4EOS(sd, platform = platform)
+    return dataset</code></pre>
+</details>
+<div class="desc"><p>Read an HDF4-EOS dataset and return an <code><a title="py4eos.HDF4EOS" href="#py4eos.HDF4EOS">HDF4EOS</a></code> object.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the input HDF4-EOS file</dd>
+<dt><strong><code>platform</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name of the data platform the SD originates from; currently
+limited to one of: ("MODIS",)</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file mode, should be "r" (read) or "w" ("write") (Default: "r")</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="py4eos.HDF4EOS" href="#py4eos.HDF4EOS">HDF4EOS</a></code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="py4eos.HDF4EOS"><code class="flex name class">
+<span>class <span class="ident">HDF4EOS</span></span>
+<span>(</span><span>dataset, platform='MODIS')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HDF4EOS(object):
+    &#39;&#39;&#39;
+    Represents an HDF4-EOS granule.
+
+    Parameters
+    ----------
+    dataset : pyhdf.SD
+        A pyhdf Scientific Dataset (SD) instance
+    platform : str
+        The name of the data platform the SD originates from; currently
+        limited to one of: (&#34;MODIS&#34;,)
+    &#39;&#39;&#39;
+
+    GRID_DIM_TO_RES = { # Mapping of grid dimensions to spatial resolution
+        &#39;MODIS&#39;: {
+            2400: 500 # 2400 x 2400 pixels == 500 meters
+        },
+        &#39;VIIRS&#39;: {
+            2400: 500
+        }
+    }
+
+    def __init__(self, dataset, platform = &#39;MODIS&#39;):
+        self.dataset = dataset
+        self.platform = platform
+        if self.platform not in PLATFORMS_SUPPORTED:
+            raise NotImplementedError(f&#39;No support for the platform &#34;{platform}&#34;&#39;)
+
+    @cached_property
+    def attrs(self):
+        if self.platform == &#39;MODIS&#39;:
+            meta = self.dataset.attributes()[&#39;StructMetadata.0&#39;]
+        elif self.platform == &#39;VIIRS&#39;:
+            meta = self.dataset[&#39;HDFEOS INFORMATION/StructMetadata.0&#39;][()]
+            if hasattr(meta, &#39;decode&#39;):
+                meta = meta.decode(&#39;utf-8&#39;)
+        attrs = [line.split(&#39;=&#39;) for line in meta.replace(&#39;\t&#39;, &#39;&#39;).split(&#39;\n&#39;)]
+        # TODO This is quick and dirty; there are multiple nested
+        #   attributes with similar names that will be overwritten when
+        #   converitng to a dictionary; it&#39;s assumed they&#39;re not important
+        attrs = list(filter(lambda x: len(x) == 2, attrs))
+        return dict(attrs)
+
+    @cached_property
+    def crs(self):
+        if self.platform in (&#39;MODIS&#39;, &#39;VIIRS&#39;):
+            wkt = SRS[6842]
+        return wkt
+
+    @cached_property
+    def geotransform(self):
+        # TODO Will need to generalize these two attribute checks when support
+        #   beyond MODIS is added
+        if self.platform in (&#39;MODIS&#39;, &#39;VIIRS&#39;):
+            if &#39;UpperLeftPointMtrs&#39; not in self.attrs.keys():
+                raise KeyError(&#39;Could not determine upper-left corner coordinates; on one of the following is missing from the attributes: &#34;UpperLeftPointMtrs&#34;&#39;)
+            if &#39;XDim&#39; not in self.attrs.keys() or &#39;YDim&#39; not in self.attrs.keys():
+                raise KeyError(&#39;Could not determine spatial resolution; &#34;XDim&#34; and &#34;YDim&#34; missing from attributes&#39;)
+        ul = list(map(float, self.attrs[&#39;UpperLeftPointMtrs&#39;].strip(&#39;()&#39;).split(&#39;,&#39;)))
+        ul_x, ul_y = ul
+        xdim = int(self.attrs[&#39;XDim&#39;])
+        xres = self.GRID_DIM_TO_RES[self.platform][xdim]
+        return (ul_x, xres, 0, ul_y, 0, -xres)
+
+    @property
+    def subdatasets(self):
+        return self.dataset.datasets() # Chain pyhdf.SD.SD.datasets()
+
+    @cached_property
+    def transform(self):
+        return Affine.from_gdal(*self.geotransform)
+
+    def get(
+            self, field, dtype = &#39;float32&#39;, nodata = None,
+            scale_and_offset = False):
+        &#39;&#39;&#39;
+        Returns the array data for the subdataset (field) named.
+
+        Parameters
+        ----------
+        field : str
+            Name of the subdataset to access
+        dtype : str
+            Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
+            (Default)
+        nodata : int or float
+            The NoData value to use; otherwise, defaults to the &#34;_FillValue&#34;
+            attribute
+        scale_and_offset: bool
+            True to apply the scale and offset, if specified, in the dataset
+            (Default: False)
+
+        Returns
+        -------
+        numpy.ndarray
+        &#39;&#39;&#39;
+        assert not scale_and_offset or &#39;float&#39; in dtype,\
+            &#39;Cannot apply scale and offset unless the output dtype is floating-point&#39;
+        dtype = getattr(np, dtype) # Convert from string to NumPy dtype
+        if isinstance(self.dataset, h5py.File):
+            ds = self.dataset[field]
+            attrs = self.dataset[field].attrs
+        else:
+            ds = self.dataset.select(field)
+            attrs = self.dataset.select(field).attributes()
+        value = ds[:].astype(dtype)
+        if scale_and_offset:
+            assert &#39;_FillValue&#39; in attrs.keys() or nodata is not None,\
+                &#39;No &#34;_FillValue&#34; found in attributes; must provide a &#34;nodata&#34; argument&#39;
+            if nodata is None:
+                nodata = attrs[&#39;_FillValue&#39;]
+            # This is a floating-point type, so we can replace NoData with NaN
+            value[value == nodata] = np.nan
+            # Also fill values out-of-range with NaN
+            if &#39;valid_range&#39; in attrs.keys():
+                vmin, vmax = attrs[&#39;valid_range&#39;]
+                value[np.logical_or(value &lt; vmin, value &gt; vmax)] = np.nan
+            if &#39;scale_factor&#39; in attrs.keys() and &#39;add_offset&#39; in attrs.keys():
+                scale = float(attrs[&#39;scale_factor&#39;])
+                offset = float(attrs[&#39;add_offset&#39;])
+            return offset + value * scale
+        return value
+
+    def to_rasterio(
+            self, field, filename, driver = &#39;GTiff&#39;, dtype = &#39;float32&#39;,
+            scale_and_offset = False):
+        &#39;&#39;&#39;
+        Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
+        User `driver = &#39;MEM&#39;` for an in-memory dataset (no file written).
+
+        Parameters
+        ----------
+        field : str
+            Name of the subdataset to write to the output data file
+        filename : str
+            File path for the output file
+        driver : str
+            Name of the file driver; defaults to &#34;GTiff&#34; for GeoTIFF output
+        dtype : str
+            Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
+            (Default)
+        scale_and_offset: bool
+            True to apply the scale and offset, if specified, in the dataset
+            (Default: False)
+
+        Returns
+        -------
+        `rasterio.DatasetWriter`
+        &#39;&#39;&#39;
+        arr = self.get(field, dtype, scale_and_offset)
+        rows, cols = arr.shape
+        rast = rio.open(
+            filename, &#39;w+&#39;, driver = driver, height = rows, width = cols,
+            count = 1, dtype = getattr(np, dtype), crs = self.crs,
+            transform = self.transform)
+        rast.write(arr, 1)
+        return rast</code></pre>
+</details>
+<div class="desc"><p>Represents an HDF4-EOS granule.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dataset</code></strong> :&ensp;<code>pyhdf.SD</code></dt>
+<dd>A pyhdf Scientific Dataset (SD) instance</dd>
+<dt><strong><code>platform</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name of the data platform the SD originates from; currently
+limited to one of: ("MODIS",)</dd>
+</dl></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="py4eos.HDF4EOS.GRID_DIM_TO_RES"><code class="name">var <span class="ident">GRID_DIM_TO_RES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="py4eos.HDF4EOS.attrs"><code class="name">var <span class="ident">attrs</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@cached_property
+def attrs(self):
+    if self.platform == &#39;MODIS&#39;:
+        meta = self.dataset.attributes()[&#39;StructMetadata.0&#39;]
+    elif self.platform == &#39;VIIRS&#39;:
+        meta = self.dataset[&#39;HDFEOS INFORMATION/StructMetadata.0&#39;][()]
+        if hasattr(meta, &#39;decode&#39;):
+            meta = meta.decode(&#39;utf-8&#39;)
+    attrs = [line.split(&#39;=&#39;) for line in meta.replace(&#39;\t&#39;, &#39;&#39;).split(&#39;\n&#39;)]
+    # TODO This is quick and dirty; there are multiple nested
+    #   attributes with similar names that will be overwritten when
+    #   converitng to a dictionary; it&#39;s assumed they&#39;re not important
+    attrs = list(filter(lambda x: len(x) == 2, attrs))
+    return dict(attrs)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="py4eos.HDF4EOS.crs"><code class="name">var <span class="ident">crs</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@cached_property
+def crs(self):
+    if self.platform in (&#39;MODIS&#39;, &#39;VIIRS&#39;):
+        wkt = SRS[6842]
+    return wkt</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="py4eos.HDF4EOS.geotransform"><code class="name">var <span class="ident">geotransform</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@cached_property
+def geotransform(self):
+    # TODO Will need to generalize these two attribute checks when support
+    #   beyond MODIS is added
+    if self.platform in (&#39;MODIS&#39;, &#39;VIIRS&#39;):
+        if &#39;UpperLeftPointMtrs&#39; not in self.attrs.keys():
+            raise KeyError(&#39;Could not determine upper-left corner coordinates; on one of the following is missing from the attributes: &#34;UpperLeftPointMtrs&#34;&#39;)
+        if &#39;XDim&#39; not in self.attrs.keys() or &#39;YDim&#39; not in self.attrs.keys():
+            raise KeyError(&#39;Could not determine spatial resolution; &#34;XDim&#34; and &#34;YDim&#34; missing from attributes&#39;)
+    ul = list(map(float, self.attrs[&#39;UpperLeftPointMtrs&#39;].strip(&#39;()&#39;).split(&#39;,&#39;)))
+    ul_x, ul_y = ul
+    xdim = int(self.attrs[&#39;XDim&#39;])
+    xres = self.GRID_DIM_TO_RES[self.platform][xdim]
+    return (ul_x, xres, 0, ul_y, 0, -xres)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="py4eos.HDF4EOS.subdatasets"><code class="name">prop <span class="ident">subdatasets</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def subdatasets(self):
+    return self.dataset.datasets() # Chain pyhdf.SD.SD.datasets()</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="py4eos.HDF4EOS.transform"><code class="name">var <span class="ident">transform</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@cached_property
+def transform(self):
+    return Affine.from_gdal(*self.geotransform)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="py4eos.HDF4EOS.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, field, dtype='float32', nodata=None, scale_and_offset=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(
+        self, field, dtype = &#39;float32&#39;, nodata = None,
+        scale_and_offset = False):
+    &#39;&#39;&#39;
+    Returns the array data for the subdataset (field) named.
+
+    Parameters
+    ----------
+    field : str
+        Name of the subdataset to access
+    dtype : str
+        Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
+        (Default)
+    nodata : int or float
+        The NoData value to use; otherwise, defaults to the &#34;_FillValue&#34;
+        attribute
+    scale_and_offset: bool
+        True to apply the scale and offset, if specified, in the dataset
+        (Default: False)
+
+    Returns
+    -------
+    numpy.ndarray
+    &#39;&#39;&#39;
+    assert not scale_and_offset or &#39;float&#39; in dtype,\
+        &#39;Cannot apply scale and offset unless the output dtype is floating-point&#39;
+    dtype = getattr(np, dtype) # Convert from string to NumPy dtype
+    if isinstance(self.dataset, h5py.File):
+        ds = self.dataset[field]
+        attrs = self.dataset[field].attrs
+    else:
+        ds = self.dataset.select(field)
+        attrs = self.dataset.select(field).attributes()
+    value = ds[:].astype(dtype)
+    if scale_and_offset:
+        assert &#39;_FillValue&#39; in attrs.keys() or nodata is not None,\
+            &#39;No &#34;_FillValue&#34; found in attributes; must provide a &#34;nodata&#34; argument&#39;
+        if nodata is None:
+            nodata = attrs[&#39;_FillValue&#39;]
+        # This is a floating-point type, so we can replace NoData with NaN
+        value[value == nodata] = np.nan
+        # Also fill values out-of-range with NaN
+        if &#39;valid_range&#39; in attrs.keys():
+            vmin, vmax = attrs[&#39;valid_range&#39;]
+            value[np.logical_or(value &lt; vmin, value &gt; vmax)] = np.nan
+        if &#39;scale_factor&#39; in attrs.keys() and &#39;add_offset&#39; in attrs.keys():
+            scale = float(attrs[&#39;scale_factor&#39;])
+            offset = float(attrs[&#39;add_offset&#39;])
+        return offset + value * scale
+    return value</code></pre>
+</details>
+<div class="desc"><p>Returns the array data for the subdataset (field) named.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>field</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the subdataset to access</dd>
+<dt><strong><code>dtype</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of a NumPy data type, e.g., "float32" for <code>numpy.float32</code>
+(Default)</dd>
+<dt><strong><code>nodata</code></strong> :&ensp;<code>int</code> or <code>float</code></dt>
+<dd>The NoData value to use; otherwise, defaults to the "_FillValue"
+attribute</dd>
+<dt><strong><code>scale_and_offset</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to apply the scale and offset, if specified, in the dataset
+(Default: False)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy.ndarray</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+</dd>
+<dt id="py4eos.HDF4EOS.to_rasterio"><code class="name flex">
+<span>def <span class="ident">to_rasterio</span></span>(<span>self, field, filename, driver='GTiff', dtype='float32', scale_and_offset=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_rasterio(
+        self, field, filename, driver = &#39;GTiff&#39;, dtype = &#39;float32&#39;,
+        scale_and_offset = False):
+    &#39;&#39;&#39;
+    Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
+    User `driver = &#39;MEM&#39;` for an in-memory dataset (no file written).
+
+    Parameters
+    ----------
+    field : str
+        Name of the subdataset to write to the output data file
+    filename : str
+        File path for the output file
+    driver : str
+        Name of the file driver; defaults to &#34;GTiff&#34; for GeoTIFF output
+    dtype : str
+        Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
+        (Default)
+    scale_and_offset: bool
+        True to apply the scale and offset, if specified, in the dataset
+        (Default: False)
+
+    Returns
+    -------
+    `rasterio.DatasetWriter`
+    &#39;&#39;&#39;
+    arr = self.get(field, dtype, scale_and_offset)
+    rows, cols = arr.shape
+    rast = rio.open(
+        filename, &#39;w+&#39;, driver = driver, height = rows, width = cols,
+        count = 1, dtype = getattr(np, dtype), crs = self.crs,
+        transform = self.transform)
+    rast.write(arr, 1)
+    return rast</code></pre>
+</details>
+<div class="desc"><p>Creates a <code>rasterio</code> dataset based on the specified HDF4-EOS dataset.
+User <code>driver = 'MEM'</code> for an in-memory dataset (no file written).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>field</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the subdataset to write to the output data file</dd>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>File path for the output file</dd>
+<dt><strong><code>driver</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the file driver; defaults to "GTiff" for GeoTIFF output</dd>
+<dt><strong><code>dtype</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of a NumPy data type, e.g., "float32" for <code>numpy.float32</code>
+(Default)</dd>
+<dt><strong><code>scale_and_offset</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True to apply the scale and offset, if specified, in the dataset
+(Default: False)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p><code>rasterio.DatasetWriter</code></p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="py4eos.srs" href="srs.html">py4eos.srs</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="py4eos.read_hdf4eos" href="#py4eos.read_hdf4eos">read_hdf4eos</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="py4eos.HDF4EOS" href="#py4eos.HDF4EOS">HDF4EOS</a></code></h4>
+<ul class="two-column">
+<li><code><a title="py4eos.HDF4EOS.GRID_DIM_TO_RES" href="#py4eos.HDF4EOS.GRID_DIM_TO_RES">GRID_DIM_TO_RES</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.attrs" href="#py4eos.HDF4EOS.attrs">attrs</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.crs" href="#py4eos.HDF4EOS.crs">crs</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.geotransform" href="#py4eos.HDF4EOS.geotransform">geotransform</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.get" href="#py4eos.HDF4EOS.get">get</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.subdatasets" href="#py4eos.HDF4EOS.subdatasets">subdatasets</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.to_rasterio" href="#py4eos.HDF4EOS.to_rasterio">to_rasterio</a></code></li>
+<li><code><a title="py4eos.HDF4EOS.transform" href="#py4eos.HDF4EOS.transform">transform</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>
