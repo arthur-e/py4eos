@@ -24,7 +24,7 @@ import rasterio as rio
 import py4eos
 from py4eos import read_hdf4eos
 
-TEST_DIR = os.path.join(os.path.dirname(py4eos.__file__), 'tests')
+TEST_DIR = os.path.join(os.path.dirname(py4eos.__file__), '../tests')
 
 @pytest.fixture
 def granule_vnp15a2h():

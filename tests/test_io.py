@@ -10,9 +10,9 @@ import earthaccess
 import rasterio as rio
 import py4eos
 from py4eos import read_hdf4eos
-from py4eos.tests.test_formats import granule_mod15a2h
+from test_formats import granule_mod15a2h
 
-TEST_DIR = os.path.join(os.path.dirname(py4eos.__file__), 'tests')
+TEST_DIR = os.path.join(os.path.dirname(py4eos.__file__), '../tests')
 
 
 def test_to_rasterio(granule_mod15a2h):
