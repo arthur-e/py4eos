@@ -6,7 +6,7 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
@@ -82,7 +82,7 @@ class HDF4EOS(object):
     def transform(self):
         return Affine.from_gdal(*self.geotransform)
 
-    def get(self, field, dtype = 'float32', scale_and_offset = False):
+    def get(self, field, dtype = 'float32', nodata = None, scale_and_offset = False):
         '''
         Returns the array data for the subdataset (field) named.
 
@@ -101,6 +101,8 @@ class HDF4EOS(object):
         -------
         numpy.ndarray
         '''
+        assert not scale_and_offset or 'float' in dtype,\
+            'Cannot apply scale and offset unless the output dtype is floating-point'
         dtype = getattr(np, dtype) # Convert from string to NumPy dtype
         if isinstance(self.dataset, h5py.File):
             ds = self.dataset[field]
@@ -108,13 +110,23 @@ class HDF4EOS(object):
         else:
             ds = self.dataset.select(field)
             attrs = self.dataset.select(field).attributes()
-        scale = 1.0
-        offset = 0.0
+        value = ds[:].astype(dtype)
         if scale_and_offset:
+            assert '_FillValue' in attrs.keys() or nodata is not None,\
+                'No "_FillValue" found in attributes; must provide a "nodata" argument'
+            if nodata is None:
+                nodata = attrs['_FillValue']
+            # This is a floating-point type, so we can replace NoData with NaN
+            value[value == nodata] = np.nan
+            # Also fill values out-of-range with NaN
+            if 'valid_range' in attrs.keys():
+                vmin, vmax = attrs['valid_range']
+                value[np.logical_or(value < vmin, value > vmax)] = np.nan
             if 'scale_factor' in attrs.keys() and 'add_offset' in attrs.keys():
                 scale = float(attrs['scale_factor'])
                 offset = float(attrs['add_offset'])
-        return (offset + ds[:] * scale).astype(dtype)
+            return offset + value * scale
+        return value
 
     def to_rasterio(
             self, field, filename, driver = 'GTiff', dtype = 'float32',

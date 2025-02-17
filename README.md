@@ -1,13 +1,13 @@
-Python Tools for EOS-HDF4 Format
+Python Tools for HDF4-EOS Format
 ================================
 
-Unfortunately, many important NASA datasets are still distributed as EOS-HDF4 granules. This small library may help you to avoid needing to install GDAL just to read the file. It is capable of reading an an HDF4 file (and EOS-HDF4 files, in particular) and writing out a spatial dataset using `rasterio`, based on some strict assumptions about the file-level attributes; assumptions that are usually satisfied by an EOS-HDF4 file.
+Unfortunately, many important NASA datasets are still distributed as HDF4-EOS granules. This small library may help you to avoid needing to install GDAL just to read the file. It is capable of reading an an HDF4 file (and HDF4-EOS files, in particular) and writing out a spatial dataset using `rasterio`, based on some strict assumptions about the file-level attributes; assumptions that are usually satisfied by an HDF4-EOS file.
 
 The problems solved by `py4eos` include:
 
-- Reading an EOS-HDF4 file without needing `GDAL` installed
-- Figuring out the coordinate reference system (CRS) and affine transformation of an EOS-HDF4 granule
-- Converting an EOS-HDF4 file to a more convenient raster format
+- Reading an HDF4-EOS file without needing `GDAL` installed
+- Figuring out the coordinate reference system (CRS) and affine transformation of an HDF4-EOS granule
+- Converting an HDF4-EOS file to a more convenient raster format
 
 
 Example Use

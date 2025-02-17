@@ -129,6 +129,19 @@ def test_read_mod16a2(granule_mod16a2):
     assert arr.dtype == np.int32
 
 
+def test_read_mod16a2_scaled(granule_mod16a2):
+    '''
+    Tests that a MOD16A2 granule can be read and handled with the proper
+    scale and offset
+    '''
+    hdf = read_hdf4eos(granule_mod16a2)
+    arr = hdf.get('ET_500m', dtype = 'float32', scale_and_offset = True)
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.float32
+    assert np.isnan(arr.max())
+    assert np.ceil(np.nanmax(arr)) == 69.0
+
+
 def test_write_mod16a2(granule_mod16a2):
     '''
     Tests that a MOD16A2 granule can be written to a GeoTIFF.
@@ -150,6 +163,19 @@ def test_read_mod16a3(granule_mod16a3):
     arr = hdf.get('ET_500m', dtype = 'int32')
     assert arr.shape == (2400, 2400)
     assert arr.dtype == np.int32
+
+
+def test_read_mod16a3_scaled(granule_mod16a3):
+    '''
+    Tests that a MOD16A3 granule can be read and handled with the proper
+    scale and offset
+    '''
+    hdf = read_hdf4eos(granule_mod16a3)
+    arr = hdf.get('ET_500m', dtype = 'float32', scale_and_offset = True)
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.float32
+    assert np.isnan(arr.max())
+    assert np.ceil(np.nanmax(arr)) == 1143.0
 
 
 def test_write_mod16a3(granule_mod16a3):
