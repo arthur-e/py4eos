@@ -259,7 +259,7 @@ limited to one of: ("MODIS",)</dd>
 
     def to_rasterio(
             self, field, filename, driver = &#39;GTiff&#39;, dtype = &#39;float32&#39;,
-            scale_and_offset = False):
+            nodata = None, scale_and_offset = False):
         &#39;&#39;&#39;
         Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
         User `driver = &#39;MEM&#39;` for an in-memory dataset (no file written).
@@ -275,6 +275,9 @@ limited to one of: ("MODIS",)</dd>
         dtype : str
             Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
             (Default)
+        nodata : int or float
+            The NoData value to use; otherwise, defaults to the &#34;_FillValue&#34;
+            attribute
         scale_and_offset: bool
             True to apply the scale and offset, if specified, in the dataset
             (Default: False)
@@ -283,7 +286,7 @@ limited to one of: ("MODIS",)</dd>
         -------
         `rasterio.DatasetWriter`
         &#39;&#39;&#39;
-        arr = self.get(field, dtype, scale_and_offset)
+        arr = self.get(field, dtype, nodata, scale_and_offset)
         rows, cols = arr.shape
         rast = rio.open(
             filename, &#39;w+&#39;, driver = driver, height = rows, width = cols,
@@ -478,7 +481,7 @@ attribute</dd>
 </dl></div>
 </dd>
 <dt id="py4eos.HDF4EOS.to_rasterio"><code class="name flex">
-<span>def <span class="ident">to_rasterio</span></span>(<span>self, field, filename, driver='GTiff', dtype='float32', scale_and_offset=False)</span>
+<span>def <span class="ident">to_rasterio</span></span>(<span>self,<br>field,<br>filename,<br>driver='GTiff',<br>dtype='float32',<br>nodata=None,<br>scale_and_offset=False)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -487,7 +490,7 @@ attribute</dd>
 </summary>
 <pre><code class="python">def to_rasterio(
         self, field, filename, driver = &#39;GTiff&#39;, dtype = &#39;float32&#39;,
-        scale_and_offset = False):
+        nodata = None, scale_and_offset = False):
     &#39;&#39;&#39;
     Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
     User `driver = &#39;MEM&#39;` for an in-memory dataset (no file written).
@@ -503,6 +506,9 @@ attribute</dd>
     dtype : str
         Name of a NumPy data type, e.g., &#34;float32&#34; for `numpy.float32`
         (Default)
+    nodata : int or float
+        The NoData value to use; otherwise, defaults to the &#34;_FillValue&#34;
+        attribute
     scale_and_offset: bool
         True to apply the scale and offset, if specified, in the dataset
         (Default: False)
@@ -511,7 +517,7 @@ attribute</dd>
     -------
     `rasterio.DatasetWriter`
     &#39;&#39;&#39;
-    arr = self.get(field, dtype, scale_and_offset)
+    arr = self.get(field, dtype, nodata, scale_and_offset)
     rows, cols = arr.shape
     rast = rio.open(
         filename, &#39;w+&#39;, driver = driver, height = rows, width = cols,
@@ -533,6 +539,9 @@ User <code>driver = 'MEM'</code> for an in-memory dataset (no file written).</p>
 <dt><strong><code>dtype</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of a NumPy data type, e.g., "float32" for <code>numpy.float32</code>
 (Default)</dd>
+<dt><strong><code>nodata</code></strong> :&ensp;<code>int</code> or <code>float</code></dt>
+<dd>The NoData value to use; otherwise, defaults to the "_FillValue"
+attribute</dd>
 <dt><strong><code>scale_and_offset</code></strong> :&ensp;<code>bool</code></dt>
 <dd>True to apply the scale and offset, if specified, in the dataset
 (Default: False)</dd>
