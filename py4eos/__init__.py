@@ -26,7 +26,7 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
@@ -155,7 +155,7 @@ class HDF4EOS(object):
 
     def to_rasterio(
             self, field, filename, driver = 'GTiff', dtype = 'float32',
-            scale_and_offset = False):
+            nodata = None, scale_and_offset = False):
         '''
         Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
         User `driver = 'MEM'` for an in-memory dataset (no file written).
@@ -171,6 +171,9 @@ class HDF4EOS(object):
         dtype : str
             Name of a NumPy data type, e.g., "float32" for `numpy.float32`
             (Default)
+        nodata : int or float
+            The NoData value to use; otherwise, defaults to the "_FillValue"
+            attribute
         scale_and_offset: bool
             True to apply the scale and offset, if specified, in the dataset
             (Default: False)
@@ -179,7 +182,7 @@ class HDF4EOS(object):
         -------
         `rasterio.DatasetWriter`
         '''
-        arr = self.get(field, dtype, scale_and_offset)
+        arr = self.get(field, dtype, nodata, scale_and_offset)
         rows, cols = arr.shape
         rast = rio.open(
             filename, 'w+', driver = driver, height = rows, width = cols,
