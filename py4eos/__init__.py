@@ -26,7 +26,7 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
 
@@ -42,13 +42,14 @@ class HDF4EOS(object):
         The name of the data platform the SD originates from; currently
         limited to one of: ("MODIS",)
     '''
-
+    MODIS_TILE_SIZE = 1111950.0 # Width and height of MODIS tile in projection plane
     GRID_DIM_TO_RES = { # Mapping of grid dimensions to spatial resolution
         'MODIS': {
-            2400: 500 # 2400 x 2400 pixels == 500 meters
+            # 2400 x 2400 pixels ~= 500 meters, but really 463.3
+            2400: MODIS_TILE_SIZE / 2400
         },
         'VIIRS': {
-            2400: 500
+            2400: MODIS_TILE_SIZE / 2400
         }
     }
 
