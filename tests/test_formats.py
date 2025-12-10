@@ -27,6 +27,20 @@ from py4eos import read_hdf4eos
 TEST_DIR = os.path.join(os.path.dirname(py4eos.__file__), '../tests')
 
 @pytest.fixture
+def granule_spl4cmdl():
+    'SMAP SPL4CMDL (Level 4 Carbon)'
+    file_list = glob.glob(f'{TEST_DIR}/SMAP_L4_C_mdl*.h5' )
+    if len(file_list) == 0:
+        results = earthaccess.search_data(
+            short_name = 'SPL4CMDL',
+            temporal = ('2015-03-31', '2015-03-31'))
+        earthaccess.download(results, TEST_DIR)
+        return f'{TEST_DIR}/{results[0]["meta"]["native-id"]}'
+    filename = file_list.pop()
+    return filename
+
+
+@pytest.fixture
 def granule_vnp15a2h():
     'VNP15A2H 8-day fPAR and LAI'
     file_list = glob.glob(f'{TEST_DIR}/VNP15A2H.*.h5' )
@@ -84,6 +98,16 @@ def granule_mod16a3():
         return f'{TEST_DIR}/{results[0]["meta"]["native-id"]}'
     filename = file_list.pop()
     return filename
+
+
+def test_read_spl4cmdl(granule_spl4cmdl):
+    '''
+    Tests that a VNP15A2H granule can be read and handled.
+    '''
+    hdf = read_hdf4eos(granule_spl4cmdl, platform = 'SMAP')
+    assert hdf.transform.to_gdal() == hdf.geotransform
+    assert hdf.transform.to_gdal() == (-17367530.45, 9000.0, 0.0, 7314540.83, 0.0, -9000.0)
+    assert hdf.get('NEE/nee_mean').shape == (1624, 3856)
 
 
 def test_read_vnp15a2h(granule_vnp15a2h):
