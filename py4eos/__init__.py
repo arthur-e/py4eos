@@ -26,9 +26,9 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.4.2'
+__version__ = '0.5.0'
 
-PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS')
+PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS', 'SMAP')
 
 class HDF4EOS(object):
     '''
@@ -50,10 +50,25 @@ class HDF4EOS(object):
         },
         'VIIRS': {
             2400: MODIS_TILE_SIZE / 2400
+        },
+        'SMAP': {
+            964: 36000.0,
+            1383: 25000.0,
+            3856: 9000.0,
+            11568: 3000.0,
+            34704: 1000.0,
         }
     }
     GROUPS = {
         'VIIRS': 'HDFEOS/GRIDS/VIIRS_Grid_ETLE/Data Fields',
+    }
+    # One or more datasets that *might* exist in a dataset, if its
+    #   (inconsistent) metadata don't provide any hints
+    FIELDS_FOR_INFERENCE = {
+        'SMAP': [
+            'NEE/nee_mean',
+            'Soil_Moisture_Retrieval_Data_AM/soil_moisture_dca',
+        ]
     }
 
     def __init__(self, dataset, platform = 'MODIS'):
@@ -70,6 +85,10 @@ class HDF4EOS(object):
             meta = self.dataset['HDFEOS INFORMATION/StructMetadata.0'][()]
             if hasattr(meta, 'decode'):
                 meta = meta.decode('utf-8')
+        elif self.platform == 'SMAP':
+            # TODO SMAP metadata is implemented terribly; it is very difficult
+            #   to extract all of it, so I'm leaving this for a later day
+            meta = ''
         attrs = [line.split('=') for line in meta.replace('\t', '').split('\n')]
         # TODO This is quick and dirty; there are multiple nested
         #   attributes with similar names that will be overwritten when
@@ -81,6 +100,8 @@ class HDF4EOS(object):
     def crs(self):
         if self.platform in ('MODIS', 'VIIRS'):
             wkt = SRS[6842]
+        elif self.platform == 'SMAP':
+            wkt = SRS[6933] # Global EASE-Grid 2.0
         return wkt
 
     @cached_property
@@ -92,9 +113,23 @@ class HDF4EOS(object):
                 raise KeyError('Could not determine upper-left corner coordinates; on one of the following is missing from the attributes: "UpperLeftPointMtrs"')
             if 'XDim' not in self.attrs.keys() or 'YDim' not in self.attrs.keys():
                 raise KeyError('Could not determine spatial resolution; "XDim" and "YDim" missing from attributes')
-        ul = list(map(float, self.attrs['UpperLeftPointMtrs'].strip('()').split(',')))
-        ul_x, ul_y = ul
-        xdim = int(self.attrs['XDim'])
+            ul = list(map(float, self.attrs['UpperLeftPointMtrs'].strip('()').split(',')))
+            ul_x, ul_y = ul
+            xdim = int(self.attrs['XDim'])
+        elif self.platform == 'SMAP':
+            # These are the same for every global EASE-Grid 2.0, regardless of
+            #   grid size; see pyl4c repository
+            ul_x = -17367530.45
+            ul_y = 7314540.83
+            # For SMAP HDF5 files, we have to find a valid dataset before we
+            #   can infer what the geotransform should be (because the SMAP
+            #   products' metadata are inconsistent)
+            xdim = None
+            for field in self.FIELDS_FOR_INFERENCE[self.platform]:
+                if field in self.dataset.keys():
+                    _, xdim = self.dataset[field].shape
+            if xdim is None:
+                raise ValueError('Could not identify this SMAP product')
         xres = self.GRID_DIM_TO_RES[self.platform][xdim]
         return (ul_x, xres, 0, ul_y, 0, -xres)
 
@@ -221,7 +256,7 @@ def read_hdf4eos(filename, platform = None, mode = 'r'):
         mode = SDC.WRITE if mode == 'w' else SDC.READ
         sd = SD(filename, mode = mode)
         dataset = HDF4EOS(sd)
-    elif platform == 'VIIRS':
+    elif platform in ('VIIRS', 'SMAP'):
         sd = h5py.File(filename, mode)
         dataset = HDF4EOS(sd, platform = platform)
     return dataset
