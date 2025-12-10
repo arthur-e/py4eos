@@ -52,6 +52,9 @@ class HDF4EOS(object):
             2400: MODIS_TILE_SIZE / 2400
         }
     }
+    GROUPS = {
+        'VIIRS': 'HDFEOS/GRIDS/VIIRS_Grid_ETLE/Data Fields',
+    }
 
     def __init__(self, dataset, platform = 'MODIS'):
         self.dataset = dataset
@@ -131,8 +134,11 @@ class HDF4EOS(object):
             'Cannot apply scale and offset unless the output dtype is floating-point'
         dtype = getattr(np, dtype) # Convert from string to NumPy dtype
         if isinstance(self.dataset, h5py.File):
-            ds = self.dataset[field]
-            attrs = self.dataset[field].attrs
+            _field = field
+            if field not in self.dataset.keys():
+                _field = f'{self.GROUPS[self.platform]}/{field}'
+            ds = self.dataset[_field]
+            attrs = self.dataset[_field].attrs
         else:
             ds = self.dataset.select(field)
             attrs = self.dataset.select(field).attributes()
@@ -203,7 +209,7 @@ def read_hdf4eos(filename, platform = None, mode = 'r'):
         File path for the input HDF4-EOS file
     platform : str
         The name of the data platform the SD originates from; currently
-        limited to one of: ("MODIS",)
+        limited to one of: ("MODIS", "VIIRS"). Assumes "MODIS" by default.
     mode : str
         The file mode, should be "r" (read) or "w" ("write") (Default: "r")
 
