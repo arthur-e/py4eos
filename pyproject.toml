@@ -10,7 +10,8 @@ authors = [
 description = "Convenience functions for working with HDF4-EOS datasets"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 dynamic = ["version"]
 classifiers = [
     "Programming Language :: Python :: 3",

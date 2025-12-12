@@ -202,6 +202,12 @@ class HDF4EOS(object):
         Creates a `rasterio` dataset based on the specified HDF4-EOS dataset.
         User `driver = 'MEM'` for an in-memory dataset (no file written).
 
+        Note that the file must be closed before it is written to disk, e.g.:
+
+            hdf = py4eos.read_file(...)
+            dset = hdf.to_rasterio(...)
+            dset.close()
+
         Parameters
         ----------
         field : str
