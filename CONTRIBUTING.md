@@ -19,6 +19,12 @@ You can upload them to TestPyPI to see how the package will look:
 twine upload --repository testpypi dist/*
 ```
 
+Otherwise, upload to PyPI using the repo's configuration:
+
+```sh
+twine upload --repository py4eos dist/*
+```
+
 This requires having an API key configured in the file `$HOME/.pypirc`:
 
 ```

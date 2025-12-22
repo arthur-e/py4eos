@@ -26,7 +26,7 @@ from affine import Affine
 from pyhdf.SD import SD, SDC
 from py4eos.srs import SRS
 
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 PLATFORMS_SUPPORTED = ('MODIS', 'VIIRS', 'SMAP')
 
@@ -142,8 +142,7 @@ class HDF4EOS(object):
         return Affine.from_gdal(*self.geotransform)
 
     def get(
-            self, field, dtype = 'float32', nodata = None,
-            scale_and_offset = False):
+            self, field, dtype = None, nodata = None, scale_and_offset = False):
         '''
         Returns the array data for the subdataset (field) named.
 
@@ -151,9 +150,8 @@ class HDF4EOS(object):
         ----------
         field : str
             Name of the subdataset to access
-        dtype : str
+        dtype : str or None
             Name of a NumPy data type, e.g., "float32" for `numpy.float32`
-            (Default)
         nodata : int or float
             The NoData value to use; otherwise, defaults to the "_FillValue"
             attribute
@@ -167,7 +165,6 @@ class HDF4EOS(object):
         '''
         assert not scale_and_offset or 'float' in dtype,\
             'Cannot apply scale and offset unless the output dtype is floating-point'
-        dtype = getattr(np, dtype) # Convert from string to NumPy dtype
         if isinstance(self.dataset, h5py.File):
             _field = field
             if field not in self.dataset.keys():
@@ -177,7 +174,10 @@ class HDF4EOS(object):
         else:
             ds = self.dataset.select(field)
             attrs = self.dataset.select(field).attributes()
-        value = ds[:].astype(dtype)
+        value = ds[:]
+        if dtype is not None:
+            dtype = getattr(np, dtype) # Convert from string to NumPy dtype
+            value = value.astype(dtype)
         if scale_and_offset:
             assert '_FillValue' in attrs.keys() or nodata is not None,\
                 'No "_FillValue" found in attributes; must provide a "nodata" argument'

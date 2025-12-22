@@ -107,7 +107,9 @@ def test_read_spl4cmdl(granule_spl4cmdl):
     hdf = read_hdf4eos(granule_spl4cmdl, platform = 'SMAP')
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-17367530.45, 9000.0, 0.0, 7314540.83, 0.0, -9000.0)
-    assert hdf.get('NEE/nee_mean').shape == (1624, 3856)
+    arr = hdf.get('NEE/nee_mean')
+    assert arr.shape == (1624, 3856)
+    assert arr.dtype == np.float32
 
 
 def test_read_vnp15a2h(granule_vnp15a2h):
@@ -117,7 +119,9 @@ def test_read_vnp15a2h(granule_vnp15a2h):
     hdf = read_hdf4eos(granule_vnp15a2h, platform = 'VIIRS')
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 463.3125, 0.0, 5559752.598333, 0.0, -463.3125)
-    assert hdf.get('HDFEOS/GRIDS/VNP_Grid_VNP15A2H/Data Fields/Fpar').shape == (2400, 2400)
+    arr = hdf.get('HDFEOS/GRIDS/VNP_Grid_VNP15A2H/Data Fields/Fpar')
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.uint8
 
 
 def test_read_mod15a2h(granule_mod15a2h):
@@ -127,7 +131,9 @@ def test_read_mod15a2h(granule_mod15a2h):
     hdf = read_hdf4eos(granule_mod15a2h)
     assert hdf.transform.to_gdal() == hdf.geotransform
     assert hdf.transform.to_gdal() == (-8895604.157333, 463.3125, 0.0, 5559752.598333, 0.0, -463.3125)
-    assert hdf.get('Lai_500m').shape == (2400, 2400)
+    arr = hdf.get('Lai_500m')
+    assert arr.shape == (2400, 2400)
+    assert arr.dtype == np.uint8
 
 
 def test_write_mod15a2h(granule_mod15a2h):
